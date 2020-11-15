@@ -65,3 +65,12 @@ body {
   overflow: auto;
   flex-grow : 1;    
 }    
+
+.fl-x-mark {
+cursor: pointer;
+float: right;
+height: 20px;
+line-height: 20px;
+border: 1px solid #acacac;
+margin-top: -1px;
+}

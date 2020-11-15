@@ -22,10 +22,11 @@ def Page(children=None, **kwargs):
     )
 
 
-def Layout(children=None, layouts=None, cols=None, rowHeight=300, **kwargs):
+def Layout(children=None, layouts=None, cols=None, rowHeight=100, **kwargs):
     
     layouts = layouts or {'lg':[], 'md':[], 'sm':[] }
-    cols = cols or { 'lg': 3, 'md': 2, 'sm': 1 }
+    cols = cols or { 'lg': 12, 'md': 6, 'sm': 2 }
+    # import pdb;pdb.set_trace()
     
     return dgl.ResponsiveGridLayout(
         children,
@@ -33,6 +34,7 @@ def Layout(children=None, layouts=None, cols=None, rowHeight=300, **kwargs):
         cols=cols,
         rowHeight=rowHeight,
         draggableHandle='.fl-titlebar',
+        draggableCancel=".fl-x-mark",
         verticalCompact=True,
         **kwargs
     )
@@ -40,7 +42,7 @@ def Layout(children=None, layouts=None, cols=None, rowHeight=300, **kwargs):
 
 def Card(children, title='Undefined', i=0, href=None, **kwargs):
     
-    t = html.A(title, href=href, target=title) if href is not None else title
+    t = [html.A(title, href=href, target=title), html.Button("X",className="fl-x-mark")]
     if isinstance(children, dcc.Graph):
         # note: don't put children in a div container wrapper, else plotly won't resize properly
         c = [html.Div(t, className='fl-titlebar')] + [children]

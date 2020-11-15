@@ -53,9 +53,9 @@ class FinishLine(object):
         
         
         # callbacks
-        self.on_layout_change = on_layout_change or (lambda lo: print('layout', lo)) 
-        
-        
+        self.on_layout_change = on_layout_change or (lambda lo: print('layout', lo))
+
+
     def register_vis(self, name, layout):
                 
         self.client_vis[name] = {
@@ -108,8 +108,11 @@ class FinishLine(object):
                 
         # client side visualization objects
         c_vis = self._gen_c_vis(components, layouts)
+        print("page_layout",page_layout)
         layout = components.Page(
-            [components.Layout(c_vis, id=page_layout, layouts=layouts, cols=cols), 
+            [
+             html.Div([html.Button('Create New Chart', id='create-chart-2',style={},n_clicks=0), html.Span("PLACEHOLDER FOR DROPPABLE CHARTS",id="placeholder")],id="top-header"),
+             components.Layout(c_vis, id=page_layout, layouts=layouts, cols=cols),
              html.Div(c_data, className='fl-data', id=page_data, style=c_data_style)],
             id=page_id)
 
