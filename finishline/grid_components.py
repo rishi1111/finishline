@@ -2,7 +2,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from textwrap import dedent
-
+import json
 import dash_responsive_grid_layout as dgl
 import copy
 
@@ -23,11 +23,11 @@ def Page(children=None, **kwargs):
 
 
 def Layout(children=None, layouts=None, cols=None, rowHeight=100, **kwargs):
-    
+
     layouts = layouts or {'lg':[], 'md':[], 'sm':[] }
     cols = cols or { 'lg': 12, 'md': 6, 'sm': 2 }
     # import pdb;pdb.set_trace()
-    
+
     return dgl.ResponsiveGridLayout(
         children,
         layouts=layouts,
@@ -41,20 +41,19 @@ def Layout(children=None, layouts=None, cols=None, rowHeight=100, **kwargs):
 
 
 def Card(children, title='Undefined', i=0, href=None, **kwargs):
-    
+
     t = [html.A(title, href=href, target=title), html.Button("X",className="fl-x-mark", id={"type":"close-btn","index":i})]
     if isinstance(children, dcc.Graph):
         # note: don't put children in a div container wrapper, else plotly won't resize properly
         c = [html.Div(t, className='fl-titlebar')] + [children]
     else:
         c = [html.Div(t, className='fl-titlebar'), html.Div(children, className='fl-content')]
-        
+
 
     return html.Div(
         c,
         className='fl-card',
-        key=str(i),
-        id=str(i),
+        id={"type":"fl-card","index":i},
         style=merge({}, kwargs.get('style', {})),
         **omit(['style'], kwargs)
     )

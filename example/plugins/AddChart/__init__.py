@@ -10,17 +10,47 @@ from datetime import datetime
 
 def initialize(app, data, fl):
     pass
-    # fl.register_vis(
-    #     "Add new chart",
-    #     html.Button("Create New Chart", id="create-chart", n_clicks=0, style={}),
-    # )
-
 
 def finalize(app, data, fl):
     pass
 
 
 def finalize1(app, data, fl):
+    @app.callback(
+        Output({"type": "fl-card", "index": MATCH}, "children"),
+        [Input({"type": "close-btn", "index": MATCH}, "n_clicks"),],
+        [
+            State({"type": "fl-card", "index": MATCH}, "children"),
+            State({"type": "fl-card", "index": MATCH}, "id"),
+        ],
+        prevent_initial_call=True,
+    )
+    def confirm_dialog(n_clicks, children, id):
+        id = id["index"]
+        dropdown = [
+            html.Span("Feedback", style={"width": "100%", "text-align": "center"}),
+            dcc.Dropdown(
+                options=[
+                    {"label": "Incorrect Graph Type", "value": "Incorrect Graph Type"},
+                    {"label": "Incorrect X-Axis", "value": "Incorrect X-Axis"},
+                    {"label": "Incorrect Y-Axis", "value": "Incorrect Y-Axis"},
+                ],
+                value=[],
+                placeholder="Choose Reason(s)",
+                multi=True,
+                id={"type": "feedback-dropdown", "index": id},
+            ),
+            html.Button(
+                "Submit & Close",
+                id={"type": "feedback-btn", "index": id},
+                type="submit",
+            ),
+        ]
+
+        children = [children[0]] + dropdown
+        # import pdb;pdb.set_trace()
+        return children
+
     @app.callback(
         Output({"type": "placeholder", "index": MATCH}, "children"),
         [Input({"type": "save-grid-btn", "index": MATCH}, "n_clicks")],
@@ -48,25 +78,29 @@ def finalize1(app, data, fl):
         ],
         [
             Input({"type": "create-chart-btn", "index": ALL}, "n_clicks"),
-            Input({"type": "close-btn", "index": ALL}, "n_clicks"),
+            Input({"type": "feedback-btn", "index": ALL}, "n_clicks"),
         ],
         [
             State({"type": "page_layout", "index": ALL}, "children"),
             State({"type": "page_layout", "index": ALL}, "layouts"),
+            State({"type": "feedback-dropdown", "index": ALL}, "value"),
+            #
         ],
         prevent_initial_call=True,
     )
-    def update_grid(n_clicks, n_clicks2, children: list, layout):
+    def update_grid(n_clicks, n_clicks2, children: list, layout, feedback_reasons):
+        import pdb;
+        # pdb.set_trace()
         if (len(layout) != 1) or (len(children) != 1):
             print("Exception - More than 1 input triggered")
             raise PreventUpdate()
-        # delete card {"index":"US Export of Plastic Scrap-101","type":"close-btn"}
         children = children[0]
         layout = layout[0]
 
         ls = callback_context.triggered
         index = ls[0]["prop_id"]
         component = json.loads(index.rsplit(".")[0])
+
         index = component["index"]
         action = component["type"]
 
@@ -74,15 +108,14 @@ def finalize1(app, data, fl):
             new_card_json, card_layout = create_chart(fl, random_id=n_clicks[0])
             children.append(new_card_json)
             layout["lg"].append(card_layout)
+        elif action == "feedback-btn" and not n_clicks2[0]:
+            # handle case where button event gets triggered # TODO
+            raise PreventUpdate()
         else:
-            import pdb
-
-            # pdb.set_trace()
-
+            print(
+                f"FEEDBACK {feedback_reasons[0]}"
+            )  # TODO - crud call for saving feedback
             children, layout = delete_chart(children, layout, index)
-            # import pdb;pdb.set_trace()
 
-        # add new card
 
         return [children], [layout]
-        # return children

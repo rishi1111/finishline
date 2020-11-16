@@ -8,12 +8,8 @@ import plotly
 def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
     random_id = random_id + 100
     chart_title = f"US Export of Plastic Scrap-{random_id}"
-    chart_title_1 = "US Export of Plastic Scrap-1"
-    chart_title_2 = "US Export of Plastic Scrap-2"
 
     chart_id = f"chart-id-{random_id}"
-    chart_id_2 = "chart-id-2"
-    chart_id_3 = "chart-id-3"
 
     graph = dcc.Graph(
         figure=dict(
@@ -143,7 +139,7 @@ def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
         "h": 2,
         "x": 0,
         "y": 0,
-        "i": chart_title,
+        "i": {"type":"fl-card","index":chart_title},
         "minW": 3,
         "minH": 2,
         "moved": False,
@@ -161,7 +157,7 @@ def delete_chart(children,layout,index):
     # pdb.set_trace()
     for idx, val in enumerate(children):
         print(idx, val)
-        if val["props"]["id"] == index:
+        if val["props"]["id"]["index"] == index:
             list_index = idx
 
     for idx, val in enumerate(layout["lg"]):
