@@ -74,3 +74,13 @@ line-height: 20px;
 border: 1px solid #acacac;
 margin-top: -1px;
 }
+
+.global-filter{
+background-color: red;
+float: bottom;
+display: inline-block;
+}
+
+.global-filter-item{
+width: 20%
+}

@@ -3,6 +3,7 @@ import glob
 import os.path
 import sys
 import traceback
+import dash_bootstrap_components as dbc
 
 import finishline.grid_components as gc
 
@@ -101,26 +102,122 @@ class FinishLine(object):
             [
                 html.Div(
                     [
-                        html.Button(
-                            "Create New Chart",
-                            id={"type": "create-chart-btn", "index": unique_name},
-                            style={},
-                            n_clicks=0,
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        html.Button(
+                                            "Create New Chart",
+                                            id={
+                                                "type": "create-chart-btn",
+                                                "index": unique_name,
+                                            },
+                                            style={},
+                                            n_clicks=0,
+                                        ),
+                                    ],
+                                    width="2",
+                                ),
+                                dbc.Col(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        options=[
+                                                            {
+                                                                "label": "Sales",
+                                                                "value": "Sales",
+                                                            },
+                                                            {
+                                                                "label": "City",
+                                                                "value": "City",
+                                                            },
+                                                            {
+                                                                "label": "Country",
+                                                                "value": "Country",
+                                                            },
+                                                            {
+                                                                "label": "Profit",
+                                                                "value": "Profit",
+                                                            },
+                                                        ],
+                                                        value=[],
+                                                        placeholder="Select a column",
+                                                        id = {"type":"create-filter-dpn","index":unique_name}
+                                                        # style={"float":"left","width": "60%"}
+                                                    )
+                                                ),
+                                                dbc.Col(
+                                                    html.Button(
+                                                        "Add filter",
+                                                        id={
+                                                            "type": "create-filter-btn",
+                                                            "index": unique_name,
+                                                        },
+                                                        # style={"float":"right","width":"30%"},
+                                                        n_clicks=0,
+                                                    )
+                                                ),
+                                            ]
+                                        ),
+                                    ],
+                                    width="5",
+                                ),
+                                dbc.Col(
+                                    [
+                                        html.Span(
+                                            "PLACEHOLDER FOR DROPPABLE CHARTS",
+                                            id={
+                                                "type": "placeholder",
+                                                "index": unique_name,
+                                            },
+                                        )
+                                    ],
+                                    width=True,
+                                ),
+                                dbc.Col(
+                                    [
+                                        html.Button(
+                                            "SAVE GRID",
+                                            id={
+                                                "type": "save-grid-btn",
+                                                "index": unique_name,
+                                            },
+                                            style={"float": "right"},
+                                            n_clicks=0,
+                                        )
+                                    ],
+                                    width="1",
+                                ),
+                            ],
+                            style={"border-bottom": "5px solid black"},
                         ),
-                        html.Span("PLACEHOLDER FOR DROPPABLE CHARTS", id={"type":"placeholder","index":unique_name}),
-                        html.Button(
-                            "SAVE GRID",
-                            id={"type": "save-grid-btn", "index": unique_name},
-                            style={"float":"right"},
-                            n_clicks=0,
+                        dbc.Row(
+                            [
+                            ],
+                            style={"padding": "10px"},
+                            id={
+                                "type": "global-filter-listing",
+                                "index": unique_name,
+                            },
                         ),
-                    ],
-                    id="top-header",
+                    ]
                 ),
-                components.Layout(c_vis, id={"type":"page_layout","index":unique_name}, layouts=layouts, cols=cols),
-                html.Div(c_data, className="fl-data", id={"type":"page_data","index":unique_name}, style=c_data_style),
+                components.Layout(
+                    c_vis,
+                    id={"type": "page_layout", "index": unique_name},
+                    layouts=layouts,
+                    cols=cols,
+                ),
+                html.Div(
+                    c_data,
+                    className="fl-data",
+                    id={"type": "page_data", "index": unique_name},
+                    style=c_data_style,
+                ),
             ],
-            id={"type":"page_id","index":unique_name},
+            id={"type": "page_id", "index": unique_name},
         )
 
         # run plugin finalize method, e.g. should be used to create callbacks
@@ -207,17 +304,13 @@ class FinishStore(dbb.Store):
 
 class BlockManager:
     def __init__(self):
-
         self._blocks = {}
 
     def register(self, name, block):
-
         self._blocks[name] = block
 
     def __getitem__(self, name):
-
         return self._blocks[name]
 
     def __getattr__(self, name):
-
         return self._blocks[name]

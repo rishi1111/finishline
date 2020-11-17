@@ -39,9 +39,9 @@ def generate_layout(**kwargs):
             layouts = ls[1]
 
     layouts = fl.generate_layout(layouts=layouts)
+    # import pdb;pdb.set_trace()
     layouts.children[1].children = children
 
-    # import pdb;pdb.set_trace()
 
 
     return layouts

@@ -4,9 +4,10 @@ import dash_core_components as dcc
 import finishline.grid_components as gc
 import json
 import plotly
+import random
 
 def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
-    random_id = random_id + 100
+    random_id = int(random.random()*100) + 100
     chart_title = f"US Export of Plastic Scrap-{random_id}"
 
     chart_id = f"chart-id-{random_id}"
