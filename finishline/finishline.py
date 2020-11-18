@@ -76,28 +76,13 @@ class FinishLine(object):
 
     def generate_layout(self, components=gc, layouts=None, cols=None):
         unique_name = self.name
-        # page_id = self.name + "-fl-page"
-        #
-        # page_layout = page_id + "-layout"
-        # page_config = page_id + "-config"
-        # page_data = page_id + "-data"
-
-        # @self.register_data(
-        #     page_config,
-        #     inputs=[Input(page_layout, "layouts")],
-        #     data=layouts,
-        #     on_update=self.on_layout_change,
-        # )
-        # def get_layout(new_config):
-        #     return json.dumps(new_config)
 
         # client side data objects
         c_data_style = {"display": "block"} if self.debug_path else {"display": "none"}
         c_data = self.store.debug_layout(self.client_data)
 
-        # client side visualization objects
-        c_vis = self._gen_c_vis(components, layouts)
-        # print("page_layout", page_layout)
+        # c_vis = self._gen_c_vis(components, layouts)
+        c_vis = []
         layout = components.Page(
             [
                 html.Div(
@@ -216,6 +201,7 @@ class FinishLine(object):
                     id={"type": "page_data", "index": unique_name},
                     style=c_data_style,
                 ),
+                html.Div(id={"type": "signal", "index": unique_name}, style={'display': 'none'})
             ],
             id={"type": "page_id", "index": unique_name},
         )
@@ -225,19 +211,19 @@ class FinishLine(object):
 
         return layout
 
-    def _gen_c_vis(self, components, layouts):
-        i = 0
-        c = []
-        ii = [l["i"] for l in layouts["lg"]] if (layouts and "lg" in layouts) else []
-        for (name, vis) in self.client_vis.items():
-            key = str(i) if str(i) in ii else name
-            key = name if name in ii else key
-            c.append(
-                components.Card(vis["layout"], title=name, i=key, href=vis["src_file"])
-            )
-            i = i + 1
-
-        return c
+    # def _gen_c_vis(self, components, layouts):
+    #     i = 0
+    #     c = []
+    #     ii = [l["i"] for l in layouts["lg"]] if (layouts and "lg" in layouts) else []
+    #     for (name, vis) in self.client_vis.items():
+    #         key = str(i) if str(i) in ii else name
+    #         key = name if name in ii else key
+    #         c.append(
+    #             components.Card(vis["layout"], title=name, i=key, href=vis["src_file"])
+    #         )
+    #         i = i + 1
+    #
+    #     return c
 
     def load_plugins(self, plugins_path="plugins/*"):
 

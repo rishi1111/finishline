@@ -7,6 +7,7 @@ from factory.filters import create_filter,delete_filter
 import json
 from dash.exceptions import PreventUpdate
 from datetime import datetime
+import pandas as pd
 
 
 def initialize(app, data, fl):
@@ -18,6 +19,41 @@ def finalize(app, data, fl):
 
 
 def finalize1(app, data, fl):
+    @app.callback(
+        Output({"type": "signal", "index": ALL, }, "children"),
+        [Input({"type": "dynamic-dpn-column", "index": ALL}, "value"),
+         ],
+        [State({"type": "page_layout", "index": ALL}, "id")],
+        prevent_initial_call=True,
+    )
+    def dynamic_filter(column_value,story_board_id):
+        import pdb;
+        pdb.set_trace()
+        if (len(column_value) != 1) or (len(story_board_id) != 1):
+            print("Exception - More than 1 input triggered")
+            raise PreventUpdate()
+        else:
+
+            story_board_id = story_board_id[0]["index"].replace("/","")
+            ls = callback_context.triggered
+            index = ls[0]["prop_id"]
+            component = json.loads(index.rsplit(".")[0])
+
+            index = component["index"]
+            action = component["type"]
+
+
+
+
+        print(index)
+        # df = pd.DataFrame({"abc":[1,2,3,4,5,6]})
+        df = pd.read_feather(f"{story_board_id}.feather")
+        df.reset_index(drop=True).to_feather(f"{story_board_id}.feather")
+
+        return column_value
+
+
+
     @app.callback(
         Output({"type": "global-filter-listing", "index": ALL,}, "children"),
         [Input({"type": "create-filter-btn", "index": ALL}, "n_clicks"),
