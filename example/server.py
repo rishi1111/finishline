@@ -25,7 +25,7 @@ def generate_layout(**kwargs):
             [dcc.Location(id="url", refresh=False), html.Div(id="page-content")]
         )
     fl = FinishLine(app=app, data=data, debug=False, debug_path=None, name=story_id)
-    fl.load_plugins()
+    # fl.load_plugins()
 
     json_path = story_id.replace("/","") + ".json"
     layouts = {}

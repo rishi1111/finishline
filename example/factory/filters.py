@@ -8,11 +8,19 @@ import random
 import dash_bootstrap_components as dbc
 
 
-def create_filter(column_name, options):
+def toggle_selected_column(column_options:list, column_name:str, disabled:bool)->list:
+    for option in column_options:
+        if option["value"] == column_name:
+            option["disabled"] = disabled
+
+    return column_options
+
+
+def create_filter(column_name:str, options,storyid,filterid):
     random_id = int(random.random() * 100) + 100
     filter_card = dbc.Col(
         [
-            dbc.Label(column_name, style={"margin-bottom": "0px"}),
+            dbc.Label([column_name], style={"margin-bottom": "0px"},id={"type": "dynamic-dpn-column-label", "index": storyid, "id":filterid}),
             dbc.Row(
                 [
                     dbc.Col(
@@ -21,7 +29,7 @@ def create_filter(column_name, options):
                             options=options,
                             value=[],
                             placeholder="Choose Value(s)",
-                            id={"type": "dynamic-dpn-column", "index": random_id}
+                            id={"type": "dynamic-dpn-column", "index": storyid, "id":filterid}
                         ),
                         width="10",
                         style={"padding-right": "0px"},
@@ -31,7 +39,7 @@ def create_filter(column_name, options):
                     dbc.Col(
                         html.Button(
                             "X",
-                            id={"type": "close-filter-btn", "index": random_id},
+                            id={"type": "close-filter-btn", "index": storyid, "id":filterid},
                             style={"margin": "5px","border": "0px","cursor":"pointer"}
                         )
                         ,width="1",
@@ -42,8 +50,9 @@ def create_filter(column_name, options):
         ],
         width="3",
         style={"margin-bottom": "10px"},
-        id={"type": "filter-card", "index": random_id},
+        id={"type": "filter-card", "index": storyid, "id":filterid},
     )
+
     return filter_card.to_plotly_json()
 
 

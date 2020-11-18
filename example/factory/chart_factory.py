@@ -6,11 +6,11 @@ import json
 import plotly
 import random
 
-def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
+def create_chart(story_id, chart_id):
     random_id = int(random.random()*100) + 100
     chart_title = f"US Export of Plastic Scrap-{random_id}"
 
-    chart_id = f"chart-id-{random_id}"
+    chart_id_dict = {"type":"dynamic-chart","index":story_id, "id":chart_id}
 
     graph = dcc.Graph(
         figure=dict(
@@ -111,7 +111,7 @@ def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
             ),
         ),
         style={"height": "90%"},
-        id=chart_id,
+        id=chart_id_dict,
         responsive=True,
         config={
             "autosizable": True,
@@ -126,7 +126,7 @@ def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
     #     chart_title, graph,
     # )
     # json manipulation for children list
-    card = gc.Card(graph, title=chart_title, i=chart_title)
+    card = gc.Card(graph, title=chart_title, card_id=chart_id, story_id = story_id)
 
     # card_json = json.dumps(card,cls=plotly.utils.PlotlyJSONEncoder)
     card_json = card.to_plotly_json()
@@ -140,7 +140,7 @@ def create_chart(fl, chart_title=None, chart_id=None, random_id=10):
         "h": 2,
         "x": 0,
         "y": 0,
-        "i": {"type":"fl-card","index":chart_title},
+        "i": {"type":"fl-card","index":story_id, "id":chart_id},
         "minW": 3,
         "minH": 2,
         "moved": False,

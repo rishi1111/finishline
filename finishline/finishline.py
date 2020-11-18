@@ -225,41 +225,41 @@ class FinishLine(object):
     #
     #     return c
 
-    def load_plugins(self, plugins_path="plugins/*"):
-
-        modules = sorted(glob.glob(plugins_path))
-
-        for m in modules:
-            #             print(m)
-            fname = m + "/__init__.py"
-            if not os.path.isfile(fname):
-                continue
-
-            if self.debug_path is not None:
-                self._curr_file = os.path.abspath(fname).replace(
-                    self.debug_path["root"], self.debug_path["target"]
-                )
-
-            self.extra_files.append(fname)  # TODO walk all py files in dir
-            spec = importlib.util.spec_from_file_location(m, fname)
-            #             print(spec)
-            plugin = importlib.util.module_from_spec(spec)
-
-            try:
-                spec.loader.exec_module(plugin)
-                plugin.initialize(self.app, self.data, self)
-            except:
-                traceback.print_exc()
-                print("Unexpected error in plugin, ", m, ": ", sys.exc_info()[0])
-                self.register_vis(
-                    m,
-                    html.Pre(
-                        "Unexpected error in " + m + "\n" + traceback.format_exc()
-                    ),
-                )
-                # TODO: register 'XXX' instead of 'plugin/XXX'
-
-            self.plugins[m] = plugin
+    # def load_plugins(self, plugins_path="plugins/*"):
+    #
+    #     modules = sorted(glob.glob(plugins_path))
+    #
+    #     for m in modules:
+    #         #             print(m)
+    #         fname = m + "/__init__.py"
+    #         if not os.path.isfile(fname):
+    #             continue
+    #
+    #         if self.debug_path is not None:
+    #             self._curr_file = os.path.abspath(fname).replace(
+    #                 self.debug_path["root"], self.debug_path["target"]
+    #             )
+    #
+    #         self.extra_files.append(fname)  # TODO walk all py files in dir
+    #         spec = importlib.util.spec_from_file_location(m, fname)
+    #         #             print(spec)
+    #         plugin = importlib.util.module_from_spec(spec)
+    #
+    #         try:
+    #             spec.loader.exec_module(plugin)
+    #             plugin.initialize(self.app, self.data, self)
+    #         except:
+    #             traceback.print_exc()
+    #             print("Unexpected error in plugin, ", m, ": ", sys.exc_info()[0])
+    #             self.register_vis(
+    #                 m,
+    #                 html.Pre(
+    #                     "Unexpected error in " + m + "\n" + traceback.format_exc()
+    #                 ),
+    #             )
+    #             # TODO: register 'XXX' instead of 'plugin/XXX'
+    #
+    #         self.plugins[m] = plugin
 
     def _finalize(self):
         for plugin in self.plugins.values():
