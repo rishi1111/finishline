@@ -109,27 +109,13 @@ class FinishLine(object):
                                             [
                                                 dbc.Col(
                                                     dcc.Dropdown(
-                                                        options=[
-                                                            {
-                                                                "label": "Sales",
-                                                                "value": "Sales",
-                                                            },
-                                                            {
-                                                                "label": "City",
-                                                                "value": "City",
-                                                            },
-                                                            {
-                                                                "label": "Country",
-                                                                "value": "Country",
-                                                            },
-                                                            {
-                                                                "label": "Profit",
-                                                                "value": "Profit",
-                                                            },
-                                                        ],
+                                                        options=[],
                                                         value=[],
                                                         placeholder="Select a column",
-                                                        id = {"type":"create-filter-dpn","index":unique_name}
+                                                        id={
+                                                            "type": "create-filter-dpn",
+                                                            "index": unique_name,
+                                                        }
                                                         # style={"float":"left","width": "60%"}
                                                     )
                                                 ),
@@ -179,15 +165,12 @@ class FinishLine(object):
                             style={"border-bottom": "5px solid black"},
                         ),
                         dbc.Row(
-                            [
-                            ],
+                            [],
                             style={"padding": "10px"},
-                            id={
-                                "type": "global-filter-listing",
-                                "index": unique_name,
-                            },
+                            id={"type": "global-filter-listing", "index": unique_name,},
                         ),
-                    ]
+                    ],
+                    id={"type": "page_header", "index": unique_name},
                 ),
                 components.Layout(
                     c_vis,
@@ -201,7 +184,10 @@ class FinishLine(object):
                     id={"type": "page_data", "index": unique_name},
                     style=c_data_style,
                 ),
-                html.Div(id={"type": "signal", "index": unique_name}, style={'display': 'none'})
+                html.Div(
+                    id={"type": "signal", "index": unique_name},
+                    style={"display": "none"},
+                ),
             ],
             id={"type": "page_id", "index": unique_name},
         )

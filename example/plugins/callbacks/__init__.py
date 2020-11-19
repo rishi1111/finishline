@@ -2,7 +2,7 @@ from dash.dependencies import Output, Input, ALL, State, MATCH, ALLSMALLER
 import dash_html_components as html
 import dash_core_components as dcc
 from dash import callback_context
-from factory.chart_factory import create_chart, delete_chart
+from factory.chart_factory import create_chart, delete_chart,update_figure
 from factory.filters import create_filter, delete_filter, toggle_selected_column
 import json
 from dash.exceptions import PreventUpdate
@@ -12,35 +12,88 @@ import pandas as pd
 
 def finalize1(app, data, fl):
     @app.callback(
-        Output({"type": "signal", "index": ALL,}, "children"),
-        [Input({"type": "dynamic-dpn-column", "index": ALL, "id": ALL}, "value"),],
-        [State({"type": "page_layout", "index": ALL}, "id")],
+        Output({"type": "dynamic-chart", "index": ALL, "id": ALL}, "figure"),
+        [Input({"type": "signal", "index": ALL}, "children")],
+        [State({"type": "dynamic-chart", "index": ALL, "id": ALL}, "figure"),
+         State({"type": "dynamic-chart", "index": ALL, "id": ALL}, "id")],
         prevent_initial_call=True,
     )
-    def dynamic_filter(column_value, story_board_id):
+    def update_chart_filter(name,figures,figure_id):
+        print(name)
+        df = pd.read_feather(f"{name[0]}.feather")
 
+
+        charts_config = []
+        newfigs = []
+        ls = callback_context.triggered
+        import pdb;
+        # pdb.set_trace()
+
+        for fig in figures:
+
+            x = {"type":fig["data"][0]["type"],
+             "xaxis":fig["layout"]["xaxis"]["title"]["text"],
+             "yaxis": fig["layout"]["yaxis"]["title"]["text"]
+             }
+            import pdb;
+            # pdb.set_trace()
+            newfig = update_figure(df,xaxis=x["xaxis"],yaxis=x["yaxis"],chart_type=x["type"])
+            newfigs.append(newfig)
+
+        print(charts_config)
+
+
+
+        return newfigs
+        # create_chart()
+        # raise PreventUpdate()
+
+
+
+    @app.callback(
+        Output({"type": "signal", "index": ALL,}, "children"),
+        [Input({"type": "dynamic-dpn-column", "index": ALL, "id": ALL}, "value"),],
+        [State({"type": "page_layout", "index": ALL}, "id"),
+         State({"type": "dynamic-dpn-column-label", "index": ALL, "id": ALL}, "children"),
+         ],
+        prevent_initial_call=True,
+    )
+    def dynamic_filter(column_value, story_board_id,label_list):
+        # import pdb;pdb.set_trace()
         if (len(story_board_id) != 1) or not column_value:
             print("Exception - More than storyboard - " + str(story_board_id))
             raise PreventUpdate()
         else:
 
+            payload = {}
+            for i,label in enumerate(label_list):
+                payload[label[0]] = column_value[i]
+
             story_board_id = story_board_id[0]["index"].replace("/", "")
-            column_value = column_value[0]
             ls = callback_context.triggered
             index = ls[0]["prop_id"]
             if index == ".":
-                raise PreventUpdate()
-            component = json.loads(index.rsplit(".")[0])
+                import pdb;pdb.set_trace()
+                # raise PreventUpdate()
+                pass
+            else:
+                component = json.loads(index.rsplit(".")[0])
+                index = component["index"]
+                action = component["type"]
 
-            index = component["index"]
-            action = component["type"]
+        # print(index)
+        print("payload",payload)
+        # df = pd.DataFrame({"abc": [1, 2, 3, 4, 5, 6]})
+        df = pd.read_feather(f"sales.feather")
+        ser = pd.Series(True, index=df.index)
+        for x in payload:
+            if payload[x]:
+                ser = ser & df[x].isin(payload[x])
+        df = df[ser].reset_index(drop=True)
 
-        print(index)
-        df = pd.DataFrame({"abc": [1, 2, 3, 4, 5, 6]})
-        # df = pd.read_feather(f"{story_board_id}.feather")
         df.reset_index(drop=True).to_feather(f"{story_board_id}.feather")
 
-        return [column_value]
+        return [story_board_id]
 
     @app.callback(
         [
@@ -50,19 +103,17 @@ def finalize1(app, data, fl):
         ],
         [
             Input({"type": "create-filter-btn", "index": ALL}, "n_clicks"),
-            Input({"type": "close-filter-btn", "index": ALL, "id": ALL}, "n_clicks"),
+            Input({"type": "close-filter-btn", "index": ALL, "id": ALL, "column_name":ALL}, "n_clicks"),
         ],
         [
             State({"type": "create-filter-dpn", "index": ALL}, "value"),
             State({"type": "global-filter-listing", "index": ALL}, "children"),
             State({"type": "create-filter-dpn", "index": ALL}, "options"),
-            State({"type": "dynamic-dpn-column-label", "index": ALL, "id": ALL}, "children"),
         ],
         prevent_initial_call=True,
     )
     def global_filter_crud(
-        n_clicks, n_clicks2, column_name, filter_list: list, column_options, deleted_filter_label
-    ):
+        n_clicks, n_clicks2, column_name, filter_list: list, column_options):
 
         if (
             (len(column_name) != 1)
@@ -80,6 +131,7 @@ def finalize1(app, data, fl):
             print(column_options)
 
         ls = callback_context.triggered
+        # import pdb;pdb.set_trace()
         index = ls[0]["prop_id"]
         component = json.loads(index.rsplit(".")[0])
 
@@ -94,10 +146,7 @@ def finalize1(app, data, fl):
             random_id = int(random.random() * 100) + 100
             filter_card = create_filter(
                 column_name=column_name,
-                options=[
-                    {"label": "hahha", "value": "Incorrect Graph Type",},
-                    {"label": "hahha X-Axis", "value": "Incorrect X-Axis",},
-                ],
+                options=[],
                 storyid=storyid,
                 filterid=random_id,
             )
@@ -106,10 +155,10 @@ def finalize1(app, data, fl):
                 column_options, column_name, disabled=True
             )
         else:
-
-            filter_list = delete_filter(storyid, filter_list)
+            # import pdb;pdb.set_trace()
+            filter_list = delete_filter(component["id"], filter_list)
             column_options = toggle_selected_column(
-                column_options, deleted_filter_label[0][0], disabled=False
+                column_options, component["column_name"], disabled=False
             )
 
         return [filter_list], [column_options], [None]
@@ -158,15 +207,19 @@ def finalize1(app, data, fl):
             State({"type": "page_layout", "index": MATCH}, "children"),
             State({"type": "page_layout", "index": MATCH}, "layouts"),
             State({"type": "page_layout", "index": MATCH}, "id"),
+            State({"type": "page_header", "index": MATCH}, "children"),
         ],
         prevent_initial_call=True,
     )
-    def update_output(n_clicks, children, layout, index):
+    def update_output(n_clicks, children, layout, index,page_header):
+        # import pdb;pdb.set_trace()
         index = index["index"].replace("/", "")
-        json_object = json.dumps((children, layout))
-        # Writing to sample.json
 
-        with open(f"{index}.json", "w") as outfile:
+        # Writing to sample.json {"type": "page_header", "index": unique_name}
+
+        with open(f"{index}.json", "w+") as outfile:
+            ls = json.load(outfile)
+            json_object = json.dumps((children, layout, page_header))
             outfile.write(json_object)
 
         return f'Placeholder - Last Saved at {datetime.now().strftime("%I:%M:%S %p")}'

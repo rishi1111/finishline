@@ -6,7 +6,7 @@ import json
 import plotly
 import random
 import dash_bootstrap_components as dbc
-
+import os
 
 def toggle_selected_column(column_options:list, column_name:str, disabled:bool)->list:
     for option in column_options:
@@ -18,6 +18,13 @@ def toggle_selected_column(column_options:list, column_name:str, disabled:bool)-
 
 def create_filter(column_name:str, options,storyid,filterid):
     random_id = int(random.random() * 100) + 100
+    json_path = storyid.replace("/", "") + ".json"
+    if os.path.isfile(json_path):
+        with open(json_path, "r") as openfile:
+            ls = json.load(openfile)
+            options = ls[3].get(column_name,[])
+            options = [{"value": x, "label": x} for x in options]
+
     filter_card = dbc.Col(
         [
             dbc.Label([column_name], style={"margin-bottom": "0px"},id={"type": "dynamic-dpn-column-label", "index": storyid, "id":filterid}),
@@ -39,7 +46,7 @@ def create_filter(column_name:str, options,storyid,filterid):
                     dbc.Col(
                         html.Button(
                             "X",
-                            id={"type": "close-filter-btn", "index": storyid, "id":filterid},
+                            id={"type": "close-filter-btn", "index": storyid, "id":filterid, "column_name":column_name},
                             style={"margin": "5px","border": "0px","cursor":"pointer"}
                         )
                         ,width="1",
@@ -60,7 +67,7 @@ def delete_filter(index,filter_list):
 
     ls_index = -1
     for idx,filter_card in enumerate(filter_list):
-        if filter_card["props"]["id"]["index"] == index:
+        if filter_card["props"]["id"]["id"] == index:
             ls_index = idx
 
     if ls_index != -1:

@@ -30,16 +30,20 @@ def generate_layout(**kwargs):
     json_path = story_id.replace("/","") + ".json"
     layouts = {}
     children = []
+    page_header = []
 
     if os.path.isfile(json_path):
         with open(json_path, "r") as openfile:
             ls = json.load(openfile)
             children = ls[0]
             layouts = ls[1]
+            page_header = ls[2]
 
     layouts = fl.generate_layout(layouts=layouts)
     # import pdb;pdb.set_trace()
     layouts.children[1].children = children
+    if page_header:
+        layouts.children[0].children = page_header
 
 
 
