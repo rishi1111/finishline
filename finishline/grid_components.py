@@ -40,9 +40,8 @@ def Layout(children=None, layouts=None, cols=None, rowHeight=100, **kwargs):
     )
 
 
-def Card(children, title='Undefined', i=0, href=None, **kwargs):
-
-    t = [html.A(title, href=href, target=title), html.Button("X",className="fl-x-mark", id={"type":"close-btn","index":i})]
+def Card(children, title, card_id, story_id, href=None, **kwargs):
+    t = [html.A(title, href=href, target=title), html.Button("X",className="fl-x-mark", id={"type":"close-btn","index":story_id, "id":card_id})]
     if isinstance(children, dcc.Graph):
         # note: don't put children in a div container wrapper, else plotly won't resize properly
         c = [html.Div(t, className='fl-titlebar')] + [children]
@@ -53,7 +52,7 @@ def Card(children, title='Undefined', i=0, href=None, **kwargs):
     return html.Div(
         c,
         className='fl-card',
-        id={"type":"fl-card","index":i},
+        id={"type":"fl-card","index":story_id, "id":card_id},
         style=merge({}, kwargs.get('style', {})),
         **omit(['style'], kwargs)
     )

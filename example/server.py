@@ -13,34 +13,37 @@ app.config.suppress_callback_exceptions = True
 app.scripts.config.serve_locally = True
 app.title = "Dash FinishLine"
 
-data = {"state": "Montréal", "country": "Canada"}
+data = {}
 
-from plugins.AddChart import finalize1
+from plugins.callbacks import finalize1
 
 
 def generate_layout(**kwargs):
-    if not kwargs.get("path_name"):
+    story_id = kwargs.get("path_name")
+    if not story_id:
         return html.Div(
             [dcc.Location(id="url", refresh=False), html.Div(id="page-content")]
         )
-    fl = FinishLine(app=app, data=data, debug=False, debug_path=None)
-    fl.load_plugins()
-    fl.name = kwargs.get("path_name")
+    fl = FinishLine(app=app, data=data, debug=False, debug_path=None, name=story_id)
+    # fl.load_plugins()
 
-    json_path = fl.name
-    json_path = json_path.replace("/","") + ".json"
+    json_path = story_id.replace("/","") + ".json"
     layouts = {}
     children = []
+    page_header = []
 
     if os.path.isfile(json_path):
         with open(json_path, "r") as openfile:
             ls = json.load(openfile)
             children = ls[0]
             layouts = ls[1]
+            page_header = ls[2]
 
     layouts = fl.generate_layout(layouts=layouts)
     # import pdb;pdb.set_trace()
     layouts.children[1].children = children
+    if page_header:
+        layouts.children[0].children = page_header
 
 
 
