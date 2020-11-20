@@ -1,10 +1,0 @@
-
-Opython:S5806u"+Rename this variable; it shadows a builtin.(Ññ¦Êÿÿÿÿÿ8¢ì‰¾Ý.
-python:S1186"[Add a nested comment explaining why this function is empty, or complete the implementation.(ÂðÈûÿÿÿÿ8¢ì‰¾Ý.
-Npython:S1481+"*Remove the unused local variable "action".(ïÒÌèúÿÿÿÿ8ÍÆ¬ÎÝ.
-Bpython:S1251"Remove this commented out code.(ðÂ«àùÿÿÿÿ8ÊÛ¢ÎÝ.
-python:S1186"[Add a nested comment explaining why this function is empty, or complete the implementation.(Ý¼£ýøÿÿÿÿ8¢ì‰¾Ý.
->python:S125‹"Remove this commented out code.(àØ£©8¢ì‰¾Ý.
-=python:S125i"Remove this commented out code.(àØ£©8¢ì‰¾Ý.
-xpython:S3776"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(…É·Áþÿÿÿÿ8†¹»¾Ý.
-=python:S125V"Remove this commented out code.(Ûˆîü8Â˜Ë¾Ý.

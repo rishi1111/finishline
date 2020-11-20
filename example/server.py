@@ -12,7 +12,7 @@ app = dash.Dash(suppress_callback_exceptions=True)
 app.config.suppress_callback_exceptions = True
 app.scripts.config.serve_locally = True
 app.title = "Dash FinishLine"
-
+server = app.server
 data = {}
 
 from plugins.callbacks import finalize1
@@ -27,20 +27,22 @@ def generate_layout(**kwargs):
     fl = FinishLine(app=app, data=data, debug=False, debug_path=None, name=story_id)
     # fl.load_plugins()
 
-    json_path = story_id.replace("/","") + ".json"
+    json_path = story_id.replace("/","") + "-v2.json"
     layouts = {}
     children = []
     page_header = []
 
-    if os.path.isfile(json_path):
-        with open(json_path, "r") as openfile:
-            ls = json.load(openfile)
-            children = ls[0]
-            layouts = ls[1]
-            page_header = ls[2]
+    try:
+        if os.path.isfile(json_path):
+            with open(json_path, "r") as openfile:
+                obj = json.load(openfile)
+                children = obj["grid-layout-children"]
+                layouts = obj["grid-layout"]
+                page_header = obj["filters"]
+    except:
+        pass
 
     layouts = fl.generate_layout(layouts=layouts)
-    # import pdb;pdb.set_trace()
     layouts.children[1].children = children
     if page_header:
         layouts.children[0].children = page_header
