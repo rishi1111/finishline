@@ -7,6 +7,7 @@ import plotly
 import random
 import dash_bootstrap_components as dbc
 import os
+import pandas as pd
 
 def toggle_selected_column(column_options:list, column_name:str, disabled:bool)->list:
     for option in column_options:
@@ -18,12 +19,16 @@ def toggle_selected_column(column_options:list, column_name:str, disabled:bool)-
 
 def create_filter(column_name:str, options,storyid,filterid):
     random_id = int(random.random() * 100) + 100
-    json_path = storyid.replace("/", "") + ".json"
+    json_path = storyid.replace("/", "") + "-v2.json"
     if os.path.isfile(json_path):
         with open(json_path, "r") as openfile:
             ls = json.load(openfile)
             options = ls[3].get(column_name,[])
             options = [{"value": x, "label": x} for x in options]
+    else:
+        df = pd.read_feather(f"sales.feather")
+        options = [{"value": x, "label": x} for x in df[column_name].unique().tolist()]
+
 
     filter_card = dbc.Col(
         [

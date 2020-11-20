@@ -109,7 +109,88 @@ class FinishLine(object):
                                             [
                                                 dbc.Col(
                                                     dcc.Dropdown(
-                                                        options=[],
+                                                        options=[
+                                                            {
+                                                                "value": "Order ID",
+                                                                "label": "Order ID",
+                                                            },
+                                                            {
+                                                                "value": "Order Date",
+                                                                "label": "Order Date",
+                                                            },
+                                                            {
+                                                                "value": "Shipping Date",
+                                                                "label": "Shipping Date",
+                                                            },
+                                                            {
+                                                                "value": "Aging",
+                                                                "label": "Aging",
+                                                            },
+                                                            {
+                                                                "value": "Ship Mode",
+                                                                "label": "Ship Mode",
+                                                            },
+                                                            {
+                                                                "value": "Product Category",
+                                                                "label": "Product Category",
+                                                            },
+                                                            {
+                                                                "value": "Product",
+                                                                "label": "Product",
+                                                            },
+                                                            {
+                                                                "value": "Sales",
+                                                                "label": "Sales",
+                                                            },
+                                                            {
+                                                                "value": "Quantity",
+                                                                "label": "Quantity",
+                                                            },
+                                                            {
+                                                                "value": "Discount",
+                                                                "label": "Discount",
+                                                            },
+                                                            {
+                                                                "value": " Profit ",
+                                                                "label": " Profit ",
+                                                            },
+                                                            {
+                                                                "value": " Shipping Cost ",
+                                                                "label": " Shipping Cost ",
+                                                            },
+                                                            {
+                                                                "value": "Order Priority",
+                                                                "label": "Order Priority",
+                                                            },
+                                                            {
+                                                                "value": "Customer ID",
+                                                                "label": "Customer ID",
+                                                            },
+                                                            {
+                                                                "value": "Customer Name",
+                                                                "label": "Customer Name",
+                                                            },
+                                                            {
+                                                                "value": "Segment",
+                                                                "label": "Segment",
+                                                            },
+                                                            {
+                                                                "value": "City",
+                                                                "label": "City",
+                                                            },
+                                                            {
+                                                                "value": "State",
+                                                                "label": "State",
+                                                            },
+                                                            {
+                                                                "value": "Country",
+                                                                "label": "Country",
+                                                            },
+                                                            {
+                                                                "value": "Region",
+                                                                "label": "Region",
+                                                            },
+                                                        ],
                                                         value=[],
                                                         placeholder="Select a column",
                                                         id={
