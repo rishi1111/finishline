@@ -21,7 +21,7 @@ def finalize1(app, data, fl):
         prevent_initial_call=True,
     )
     def update_chart_filter(name, figures, figure_id):
-        print(name)
+        # print(name)
         df = pd.read_feather(f"{name[0]}.feather")
 
         charts_config = []
@@ -46,7 +46,7 @@ def finalize1(app, data, fl):
             )
             newfigs.append(newfig)
 
-        print(charts_config)
+        # print(charts_config)
 
         return newfigs
         # create_chart()
@@ -81,7 +81,7 @@ def finalize1(app, data, fl):
             if index == ".":
                 import pdb
 
-                pdb.set_trace()
+                # pdb.set_trace()
                 # raise PreventUpdate()
                 pass
             else:
@@ -90,7 +90,7 @@ def finalize1(app, data, fl):
                 action = component["type"]
 
         # print(index)
-        print("payload", payload)
+        # print("payload", payload)
         # df = pd.DataFrame({"abc": [1, 2, 3, 4, 5, 6]})
         df = pd.read_feather(f"sales.feather")
         ser = pd.Series(True, index=df.index)
@@ -145,7 +145,7 @@ def finalize1(app, data, fl):
             column_name = column_name[0]
             column_options = column_options[0]
 
-            print(column_options)
+            # print(column_options)
 
         ls = callback_context.triggered
         # import pdb;pdb.set_trace()

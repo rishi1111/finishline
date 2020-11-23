@@ -8,7 +8,7 @@ from finishline import FinishLine
 import dash_html_components as html
 import dash_core_components as dcc
 
-app = dash.Dash(suppress_callback_exceptions=True)
+app = dash.Dash(__name__,suppress_callback_exceptions=True)
 app.config.suppress_callback_exceptions = True
 app.scripts.config.serve_locally = True
 app.title = "Dash FinishLine"

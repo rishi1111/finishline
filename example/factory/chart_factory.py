@@ -2,6 +2,8 @@ from dash.dependencies import Output, Input, State
 import dash_html_components as html
 import dash_core_components as dcc
 import finishline.grid_components as gc
+import plotly.graph_objects as go
+
 import json
 import plotly
 import random
@@ -9,6 +11,7 @@ import pandas as pd
 from numpy import array
 import datetime
 import plotly.express as px
+import dash_bootstrap_components as dbc
 
 fig = {
     "data": [
@@ -6017,11 +6020,87 @@ def create_chart(story_id, chart_id):
     return card_json, layout_card
 
 
+# def create_chart(story_id, chart_id):
+#
+#     random_id = int(random.random() * 100) + 100
+#     chart_title = f"..."
+#
+#     chart_id_dict = {"type": "dynamic-text", "index": story_id, "id": chart_id}
+#
+#     fig = go.Figure()
+#
+#     if random_id % 2 == 0:
+#         title = {'text': "Increase in Sales"}
+#         value = random_id
+#         ref = random_id - 500
+#     else:
+#         title = {'text': "Decrease in Sales"}
+#         value = random_id
+#         ref = random_id + 500
+#
+#
+#     fig.add_trace(go.Indicator(
+#         title=title,
+#         mode="number+delta",
+#         value=value,
+#         delta={'reference': ref}))
+#     fig.update_layout(dict(
+#         showlegend=True,
+#         legend=dict(x=0, y=1.0),
+#         margin=dict(l=0, r=0, t=30, b=10),
+#     ))
+#
+#
+#     graph = dcc.Graph(
+#         figure=fig,
+#         style={"height": "90%"},
+#         id=chart_id_dict,
+#         responsive=True,
+#         config={
+#             "autosizable": True,
+#             "doubleClick": "autosize",
+#             "frameMargins": 0,
+#             "responsive": True,
+#             "watermark": False,
+#         },
+#     )
+#
+#     # Text Component
+#     # fig = dbc.Textarea(className="mb-3", placeholder="A Textarea",style = {"width":"100%","height":"100%","border":"0px"},draggable=False)
+#
+#
+#
+#
+#     # json manipulation for children list
+#     card = gc.Card(graph, title=chart_title, card_id=chart_id, story_id=story_id)
+#
+#     # card_json = json.dumps(card,cls=plotly.utils.PlotlyJSONEncoder)
+#     card_json = card.to_plotly_json()
+#     ls = card_json["props"]["children"]
+#     ls2 = [x.to_plotly_json() for x in ls]
+#     card_json["props"]["children"] = ls2
+#
+#     # json manipulation for layouts
+#     layout_card = {
+#         "w": 3,
+#         "h": 2,
+#         "x": 0,
+#         "y": 0,
+#         "i": {"type": "fl-card", "index": story_id, "id": chart_id},
+#         "minW": 3,
+#         "minH": 2,
+#         "moved": False,
+#         "static": False,
+#     }
+#
+#     return card_json, layout_card
+
+
 def delete_chart(children, layout, index):
     list_index = -1
     layout_index = -1
     for idx, val in enumerate(children):
-        print(idx, val)
+        # print(idx, val)
         if val["props"]["id"]["id"] == index:
             list_index = idx
 
